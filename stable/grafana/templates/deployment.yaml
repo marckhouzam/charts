@@ -15,6 +15,7 @@ spec:
       annotations:
         checksum/config: {{ include (print $.Template.BasePath "/configmap.yaml") . | sha256sum }}
         checksum/dashboards-config: {{ include (print $.Template.BasePath "/dashboards-configmap.yaml") . | sha256sum }}
+        checksum/ldap-config: {{ include (print $.Template.BasePath "/ldap-configmap.yaml") . | sha256sum }}
       {{- range $key, $value := .Values.server.annotations }}
         {{ $key }}: {{ $value }}
       {{- end }}
@@ -74,6 +75,9 @@ spec:
         - name: config-volume
           configMap:
             name: {{ template "grafana.server.fullname" . }}-config
+            items:
+            - key: ldap.toml
+              path: ldap.toml
         - name: dashboard-volume
           configMap:
             name: {{ template "grafana.server.fullname" . }}-dashs
